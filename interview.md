@@ -147,7 +147,7 @@ name1=value1&name2=value2
 
 ### 13、Spring的MVC设计思想
 - Spring MVC工作流程图
-1. 图一 ![https://github.com/TigrexR/Interview/blob/master/image/13-1.PNG]![图片不存在]
+1. 图一 ![Image text](https://github.com/TigrexR/Interview/blob/master/image/13-1.PNG)![Image discription]
 2. 图二 
 
 
