@@ -146,18 +146,9 @@ name1=value1&name2=value2
 原理：就不用多说了吧，拿出一个数据库，专门用来存储session信息。保证session的持久化。 优点：服务器出现问题，session不会丢失 缺点：如果网站的访问量很大，把session存储到数据库中，会对数据库造成很大压力，还需要增加额外的开销维护数据库。
 
 ### 13、Spring的MVC设计思想
-Spring MVC工作流程图
-
-
-
-图一
-
-
-
-
-
-
-图二 
+- Spring MVC工作流程图
+1. 图一 ![https://github.com/TigrexR/Interview/blob/master/image/13-1.PNG]![图片不存在]
+2. 图二 
 
 
 
