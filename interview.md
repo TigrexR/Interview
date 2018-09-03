@@ -376,6 +376,7 @@ https://blog.csdn.net/yan_wenliang/article/details/51029372
 
 ### 30、BIO、NIO、AIO的概念
 https://blog.csdn.net/u013068377/article/details/70312551
+- AIO的介绍 https://blog.csdn.net/u010963948/article/details/78507615
 
 ### 31、什么是长连接和短连接
 https://www.cnblogs.com/gotodsp/p/6366163.html
