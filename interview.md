@@ -125,38 +125,33 @@ name1=value1&name2=value2
 3. OPTIONS 返回服务器支持的 HTTP 方法
 4. CONNECT 把请求连接转换到透明的 TCP/IP 通道。
 ### 11、Session与Cookie区别
-cookie数据存放在客户的浏览器上，session数据放在服务器上。
-cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗考虑到安全应当使用session。
-session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能考虑到减轻服务器性能方面，应当使用COOKIE。
-单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+1. cookie数据存放在客户的浏览器上，session数据放在服务器上。
+2. cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗考虑到安全应当使用session。
+3. session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能考虑到减轻服务器性能方面，应当使用COOKIE。
+4. 单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
 所以个人建议：
-将登陆信息等重要信息存放为SESSION
-其他信息如果需要保留，可以放在COOKIE中
-12、session 分布式处理
-第一种：粘性session
-
+5. 将登陆信息等重要信息存放为SESSION，其他信息如果需要保留，可以放在COOKIE中
+### 12、session 分布式处理
+- 第一种：粘性session
 粘性Session是指将用户锁定到某一个服务器上，比如上面说的例子，用户第一次请求时，负载均衡器将用户的请求转发到了A服务器上，如果负载均衡器设置了粘性Session的话，那么用户以后的每次请求都会转发到A服务器上，相当于把用户和A服务器粘到了一块，这就是粘性Session机制
 
-第二种：服务器session复制
-
+- 第二种：服务器session复制
 原理：任何一个服务器上的session发生改变（增删改），该节点会把这个 session的所有内容序列化，然后广播给所有其它节点，不管其他服务器需不需要session，以此来保证Session同步。
 
-第三种：session共享机制
-
+- 第三种：session共享机制
 使用分布式缓存方案比如memcached、Redis，但是要求Memcached或Redis必须是集群。
-
 原理：不同的 tomcat指定访问不同的主memcached。多个Memcached之间信息是同步的，能主从备份和高可用。用户访问时首先在tomcat中创建session，然后将session复制一份放到它对应的memcahed上
 
-第四种：session持久化到数据库
-
+- 第四种：session持久化到数据库
 原理：就不用多说了吧，拿出一个数据库，专门用来存储session信息。保证session的持久化。 优点：服务器出现问题，session不会丢失 缺点：如果网站的访问量很大，把session存储到数据库中，会对数据库造成很大压力，还需要增加额外的开销维护数据库。
 
-13、Spring的MVC设计思想
+### 13、Spring的MVC设计思想
 Spring MVC工作流程图
 
 
 
 图一
+
 
 
 
