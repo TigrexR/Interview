@@ -148,13 +148,8 @@ name1=value1&name2=value2
 ### 13、Spring的MVC设计思想
 - Spring MVC工作流程图
 1. 图一 ![Image text](https://github.com/TigrexR/Interview/blob/master/image/13-1.PNG)
-2. 图二 
-
-
-
-
-
-Spring工作流程描述
+2. 图二 ![Image text](https://github.com/TigrexR/Interview/blob/master/image/13-2.PNG)
+3. Spring工作流程描述
 
       1. 用户向服务器发送请求，请求被Spring 前端控制Servelt DispatcherServlet捕获；
 
@@ -162,15 +157,7 @@ Spring工作流程描述
 
       3. DispatcherServlet 根据获得的Handler，选择一个合适的HandlerAdapter。（附注：如果成功获得HandlerAdapter后，此时将开始执行拦截器的preHandler(...)方法）
 
-       4.  提取Request中的模型数据，填充Handler入参，开始执行Handler（Controller)。 在填充Handler的入参过程中，根据你的配置，Spring将帮你做一些额外的工作：
-
-      HttpMessageConveter： 将请求消息（如Json、xml等数据）转换成一个对象，将对象转换为指定的响应信息
-
-      数据转换：对请求消息进行数据转换。如String转换成Integer、Double等
-
-      数据根式化：对请求消息进行数据格式化。 如将字符串转换成格式化数字或格式化日期等
-
-      数据验证： 验证数据的有效性（长度、格式等），验证结果存储到BindingResult或Error中
+       4.  提取Request中的模型数据，填充Handler入参，开始执行Handler（Controller)。 在填充Handler的入参过程中，根据你的配置，Spring将帮你做一些额外的工作：HttpMessageConveter： 将请求消息（如Json、xml等数据）转换成一个对象，将对象转换为指定的响应信息数据转换：对请求消息进行数据转换。如String转换成Integer、Double等数据根式化：对请求消息进行数据格式化。 如将字符串转换成格式化数字或格式化日期等。数据验证： 验证数据的有效性（长度、格式等），验证结果存储到BindingResult或Error中
 
       5.  Handler执行完成后，向DispatcherServlet 返回一个ModelAndView对象；
 
@@ -180,126 +167,88 @@ Spring工作流程描述
 
       8. 将渲染结果返回给客户端。
 
-Spring工作流程描述
+4. Spring工作流程描述
+      1. 为什么Spring只使用一个Servlet(DispatcherServlet)来处理所有请求？
+        详细见J2EE设计模式-前端控制模式
+        Spring为什么要结合使用HandlerMapping以及HandlerAdapter来处理Handler?
+        符合面向对象中的单一职责原则，代码架构清晰，便于维护，最重要的是代码可复用性高。如HandlerAdapter可能会被用于处理多种Handler。
+
+        1. 请求旅程的第一站是Spring的DispatcherServlet。与大多数基于Java的Web框架一样，Spring MVC所有的请求都会通过一个前端控制器(front contrller)Servlet.前端控制器是常用Web应用程序模式。在这里一个单实例的Servlet将请求委托给应用的其他组件来执行实际的处理。在Spring MVC中，DisPatcherServlet就是前端控制器。
 
 
-为什么Spring只使用一个Servlet(DispatcherServlet)来处理所有请求？
-详细见J2EE设计模式-前端控制模式
-Spring为什么要结合使用HandlerMapping以及HandlerAdapter来处理Handler?
-符合面向对象中的单一职责原则，代码架构清晰，便于维护，最重要的是代码可复用性高。如HandlerAdapter可能会被用于处理多种Handler。
-
-1、请求旅程的第一站是Spring的DispatcherServlet。与大多数基于Java的Web框架一样，Spring MVC所有的请求都会通过一个前端控制器(front contrller)Servlet.前端控制器是常用Web应用程序模式。在这里一个单实例的Servlet将请求委托给应用的其他组件来执行实际的处理。在Spring MVC中，DisPatcherServlet就是前端控制器。
+        2. DisPactcher的任务是将请求发送Spring MVC控制器(controller).控制器是一个用于处理请求的Spring组件。在典型的应用中可能会有多个控制器，DispatcherServlet需要知道应该将请求发送给那个哪个控制器。所以Dispactcher以会查询一个或 多个处理器映射(Handler mapping),来确定请求的下一站在哪里。处理映射器根据请求携带的 URL信息来进行决策。
 
 
-2、DisPactcher的任务是将请求发送Spring MVC控制器(controller).控制器是一个用于处理请求的Spring组件。在典型的应用中可能会有多个控制器，DispatcherServlet需要知道应该将请求发送给那个哪个控制器。所以Dispactcher以会查询一个或 多个处理器映射(Handler mapping),来确定请求的下一站在哪里。处理映射器根据请求携带的 URL信息来进行决策。
+        3. 一旦选择了合适的控制器，DispatcherServlet会将请求发送给选中的控制器。到了控制器，请求会卸下其负载(用户提交的信息)并耐心等待控制器处理这些信息。(实际上，设计良好的控制器 本身只是处理很少，甚至不处理工作，而是将业务逻辑委托给一个或多个服务器对象进行处理)
 
 
-3、一旦选择了合适的控制器，DispatcherServlet会将请求发送给选中的控制器。到了控制器，请求会卸下其负载(用户提交的信息)并耐心等待控制器处理这些信息。(实际上，设计良好的控制器 本身只是处理很少，甚至不处理工作，而是将业务逻辑委托给一个或多个服务器对象进行处理)
+        4. 控制器在完成处理逻辑后，通常会产生一些信息。这些 信息需要返回给 用户，并在浏览器上显示。这些信息被称为模型(Model),不过仅仅给用户返回原始的信息是不够的----这些信息需要以用户友好的方式进行格式化，一般会是HTML。所以，信息需要发送一个视图(View),通常会是JSP。
 
 
-4、控制器在完成处理逻辑后，通常会产生一些信息。这些 信息需要返回给 用户，并在浏览器上显示。这些信息被称为模型(Model),不过仅仅给用户返回原始的信息是不够的----这些信息需要以用户友好的方式进行格式化，一般会是HTML。所以，信息需要发送一个视图(View),通常会是JSP。
+        5. 控制器做的最后一件事就是将模型打包，并且表示出用于渲染输出的视图名。它接下来会将请求连同模型和视图发送回DispatcherServlet。
 
 
-5、 控制器做的最后一件事就是将模型打包，并且表示出用于渲染输出的视图名。它接下来会将请求连同模型和视图发送回DispatcherServlet。
+        6. 这样，控制器就不会与特定的视图相耦合*传递给控制器的视图名并不直接表示某个特定的jsp。实际上，它甚至并不能确定视图就是JSP。相反，它仅仅传递了一个逻辑名称，这个名字将会用来查找产生结果的真正视图。DispatcherServlet将会使用视图解析器(View resolver),来将逻辑视图名称匹配为一个特定的视图实现，他可能也可能不是JSP
 
 
-6、这样，控制器就不会与特定的视图相耦合*传递给控制器的视图名并不直接表示某个特定的jsp。实际上，它甚至并不能确定视图就是JSP。相反，它仅仅传递了一个逻辑名称，这个名字将会用来查找产生结果的真正视图。DispatcherServlet将会使用视图解析器(View resolver),来将逻辑视图名称匹配为一个特定的视图实现，他可能也可能不是JSP
+        7. 虽然DispatcherServlet已经知道了哪个驶入渲染结果、那请求的任务基本上也就完成了，它的最后一站是试图的实现。在这里它交付给模型数据。请求的任务就结束了。视图将使用模型数据渲染输出。这个输出通过响应对象传递给客户端(不会像听上去那样硬编码)
 
 
-7、虽然DispatcherServlet已经知道了哪个驶入渲染结果、那请求的任务基本上也就完成了，它的最后一站是试图的实现。在这里它交付给模型数据。请求的任务就结束了。视图将使用模型数据渲染输出。这个输出通过响应对象传递给客户端(不会像听上去那样硬编码)
+        8. 可以看到，请求要经过很多步骤，最终才能形成返回给客户端的响应，大多数的 步骤都是在Spirng框架内部完成的。
 
 
-可以看到，请求要经过很多步骤，最终才能形成返回给客户端的响应，大多数的 步骤都是在Spirng框架内部完成的。
+### 14、MVC 设计思想
+        什么是设计思想？前人踩过无数的坑，总结出来的真理。一般用来解决特定问题。需要好好学习设计模式，框架中大量采用.
+        那MVC又是什么东东？
+        回答之前我们先看看设计的原则。单一职责，开闭原则，面向接口编程，对象最少知道。一句话总结：“高内聚，低耦合”。六个字一个逗号。
 
 
-14、MVC 设计思想
+        Model(模型层) ：一般存放处理逻辑，
+        View (视图层)：存放html，jsp，文件
+        Controller(控制层)：主要负责调度两者，实现解耦。
 
-什么是设计思想？前人踩过无数的坑，总结出来的真理。一般用来解决特定问题。需要好好学习设计模式，框架中大量采用.
-
-
-那MVC又是什么东东？
-
-
-回答之前我们先看看设计的原则。单一职责，开闭原则，面向接口编程，对象最少知道。一句话总结：“高内聚，低耦合”。六个字一个逗号。
+1. 当我们像浏览器发送一个请求时，首先需要经过控制层(DispatcherServlet),其是它实际不做什么事情，委托给别人做。调用模型层(处理一些业务逻辑)，返回数据模型给控制器，接着在委托视图解析器解析视图。最后定位到视图的资源，返回给控制器，控制器在返回给客户端。(其实需要做的还有很多)
+2. 主要的目的是解耦，各司其职。做好你份内的事。对扩展性也好。增加需求不会影响到其他模块。
 
 
-Model(模型层) ：一般存放处理逻辑，
-View (视图层)：存放html，jsp，文件
-Controller(控制层)：主要负责调度两者，实现解耦。
-
-当我们像浏览器发送一个请求时，首先需要经过控制层(DispatcherServlet),其是它实际不做什么事情，委托给别人做。调用模型层(处理一些业务逻辑)，返回数据模型给控制器，接着在委托视图解析器解析视图。最后定位到视图的资源，返回给控制器，控制器在返回给客户端。(其实需要做的还有很多)
-
-
-主要的目的是解耦，各司其职。做好你份内的事。对扩展性也好。增加需求不会影响到其他模块。
-
-
-15、equals与==的区别
-== 比较的是变量(栈)内存中存放的对象的(堆)内存地址，用来判断两个对象的地址是否相同，即是否是指相同一个对象。比较的是真正意义上的指针操作。
+### 15、equals与==的区别
+1. == 比较的是变量(栈)内存中存放的对象的(堆)内存地址，用来判断两个对象的地址是否相同，即是否是指相同一个对象。比较的是真正意义上的指针操作。
 equals用来比较的是两个对象的内容是否相等，由于所有的类都是继承自java.lang.Object类的，所以适用于所有对象，如果没有对该方法进行覆盖的话，调用的仍然是Object类中的方法，而Object中的equals方法返回的却是==的判断。
 
-16、hashCode和equals方法的区别与联系
- hashCode()方法和equal()方法的作用其实一样，在Java里都是用来对比两个对象是否相等一致，那么equal()既然已经能实现对比的功能了，为什么还要hashCode()呢？
-
- 
-
-     因为重写的equal（）里一般比较的比较全面比较复杂，这样效率就比较低，而利用hashCode()进行对比，则只要生成一个hash值进行比较就可以了，效率很高，那么hashCode()既然效率这么高为什么还要equal()呢？
-
- 
-
-           因为hashCode()并不是完全可靠，有时候不同的对象他们生成的hashcode也会一样（生成hash值得公式可能存在的问题），所以hashCode()只能说是大部分时候可靠，并不是绝对可靠，所以我们可以得出：
-
- 
-
-         1.equal()相等的两个对象他们的hashCode()肯定相等，也就是用equal()对比是绝对可靠的。
-
-         2.hashCode()相等的两个对象他们的equal()不一定相等，也就是hashCode()不是绝对可靠的。
-
- 
-
-所有对于需要大量并且快速的对比的话如果都用equal()去做显然效率太低，所以解决方式是，每当需要对比的时候，首先用hashCode()去对比，如果hashCode()不一样，则表示这两个对象肯定不相等（也就是不必再用equal()去再对比了）,如果hashCode()相同，此时再对比他们的equal()，如果equal()也相同，则表示这两个对象是真的相同了，这样既能大大提高了效率也保证了对比的绝对正确性！
+### 16、hashCode和equals方法的区别与联系
+1. hashCode()方法和equal()方法的作用其实一样，在Java里都是用来对比两个对象是否相等一致，那么equal()既然已经能实现对比的功能了，为什么还要hashCode()呢？
+因为重写的equal（）里一般比较的比较全面比较复杂，这样效率就比较低，而利用hashCode()进行对比，则只要生成一个hash值进行比较就可以了，效率很高，那么hashCode()既然效率这么高为什么还要equal()呢？因为hashCode()并不是完全可靠，有时候不同的对象他们生成的hashcode也会一样（生成hash值得公式可能存在的问题），所以hashCode()只能说是大部分时候可靠，并不是绝对可靠，所以我们可以得出：
+      1. equal()相等的两个对象他们的hashCode()肯定相等，也就是用equal()对比是绝对可靠的。
+      2. hashCode()相等的两个对象他们的equal()不一定相等，也就是hashCode()不是绝对可靠的。
+2. 所有对于需要大量并且快速的对比的话如果都用equal()去做显然效率太低，所以解决方式是，每当需要对比的时候，首先用hashCode()去对比，如果hashCode()不一样，则表示这两个对象肯定不相等（也就是不必再用equal()去再对比了）,如果hashCode()相同，此时再对比他们的equal()，如果equal()也相同，则表示这两个对象是真的相同了，这样既能大大提高了效率也保证了对比的绝对正确性！
 
 
-17、什么是Java序列化和反序列化，如何实现Java序列化？或者请解释Serializable 接口的作用
-当两个进程在进行远程通信时，彼此可以发送各种类型的数据。无论是何种类型的数据，都会以二进制序列的形式在网络上传送。发送方需要把这个Java对象转换为字节序列，才能在网络上传送；接收方则需要把字节序列再恢复为Java对象。
+### 17、什么是Java序列化和反序列化，如何实现Java序列化？或者请解释Serializable 接口的作用
+1. 当两个进程在进行远程通信时，彼此可以发送各种类型的数据。无论是何种类型的数据，都会以二进制序列的形式在网络上传送。发送方需要把这个Java对象转换为字节序列，才能在网络上传送；接收方则需要把字节序列再恢复为Java对象。
+2. 只能将支持 java.io.Serializable 接口的对象写入流中。每个 serializable 对象的类都被编码，编码内容包括类名和类签名、对象的字段值和数组值，以及从初始对象中引用的其他所有对象的闭包。
+    1. 概念
+    序列化：把Java对象转换为字节序列的过程。
+    反序列化：把字节序列恢复为Java对象的过程。
 
-　　只能将支持 java.io.Serializable 接口的对象写入流中。每个 serializable 对象的类都被编码，编码内容包括类名和类签名、对象的字段值和数组值，以及从初始对象中引用的其他所有对象的闭包。
-
-1.概念
-
-　　序列化：把Java对象转换为字节序列的过程。
-
-　　反序列化：把字节序列恢复为Java对象的过程。
-
-2.用途
-
-　　对象的序列化主要有两种用途：
-
-　　1） 把对象的字节序列永久地保存到硬盘上，通常存放在一个文件中；
-
-　　2） 在网络上传送对象的字节序列。
-
- 
-
-3.对象序列化
-
-序列化API
-
-　　java.io.ObjectOutputStream代表对象输出流，它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。只有实现了Serializable和Externalizable接口的类的对象才能被序列化。
-
-　　java.io.ObjectInputStream代表对象输入流，它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
+    2. 用途 对象的序列化主要有两种用途：
+        1） 把对象的字节序列永久地保存到硬盘上，通常存放在一个文件中；
+        2） 在网络上传送对象的字节序列。
+    3. 对象序列化：序列化API
+        
+        java.io.ObjectOutputStream代表对象输出流，它的writeObject(Object obj)方法可对参数指定的obj对象进行序列化，把得到的字节序列写到一个目标输出流中。只有实现了Serializable和Externalizable接口的类的对象才能被序列化。java.io.ObjectInputStream代表对象输入流，它的readObject()方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
 
 
-18、Object类中常见的方法，为什么wait  notify会放在Object里边？
-这些方法存在于同步中；
+### 18、Object类中常见的方法，为什么wait  notify会放在Object里边？
+- 这些方法存在于同步中；
 使用这些方法必须标识同步所属的锁；
 锁可以是任意对象，所以任意对象调用方法一定定义在Object类中。
  
 
      Condition是在java 1.5中才出现的，它用来替代传统的Object的wait()、notify()实现线程间的协作，相比使用Object的wait()、notify()，使用Condition1的await()、signal()这种方式实现线程间协作更加安全和高效。因此通常来说比较推荐使用Condition，在阻塞队列那一篇博文中就讲述到了，阻塞队列实际上是使用了Condition来模拟线程间协作。
 
-Condition是个接口，基本的方法就是await()和signal()方法；
+- Condition是个接口，基本的方法就是await()和signal()方法；
 Condition依赖于Lock接口，生成一个Condition的基本代码是lock.newCondition() 
- 调用Condition的await()和signal()方法，都必须在lock保护之内，就是说必须在lock.lock()和lock.unlock之间才可以使用
+调用Condition的await()和signal()方法，都必须在lock保护之内，就是说必须在lock.lock()和lock.unlock之间才可以使用
      Conditon中的await()对应Object的wait()；
 
      Condition中的signal()对应Object的notify()；
@@ -307,212 +256,193 @@ Condition依赖于Lock接口，生成一个Condition的基本代码是lock.newCo
      Condition中的signalAll()对应Object的notifyAll()；
 
 
-19、List 和 Set 区别
-/**
- * 1.存储对象可以考虑：①数组 ②集合
- * 2.数组存储对象的特点：Student[] stu = new Student[20]; stu[0] = new Student();....
- * >弊端：①一旦创建，其长度不可变。②真实的数组存放的对象的个数是不可知。
- * 集合其实底层也是通过数组实现的
- * 3.集合
- * Collection接口
- * |------List接口：存储有序的，可以重复的元素
- * |------ArrayList（主要的实现类）、LinkedList（对于频繁的插入、删除操作）、Vector（古老的实现类、线程安全的）
- * |------Set接口：存储无序的，不可重复的元素
- * |------HashSet、LinkedHashSet、TreeSet
- * Map接口：存储“键-值”对的数据
- * |-----HashMap、LinkedHashMap、TreeMap、Hashtable(子类：Properties)
- */
+### 19、List 和 Set 区别
+        /**
+        * 1.存储对象可以考虑：①数组 ②集合
+        * 2.数组存储对象的特点：Student[] stu = new Student[20]; stu[0] = new Student();....
+        * >弊端：①一旦创建，其长度不可变。②真实的数组存放的对象的个数是不可知。
+        * 集合其实底层也是通过数组实现的
+        * 3.集合
+        * Collection接口
+        * |------List接口：存储有序的，可以重复的元素
+        * |------ArrayList（主要的实现类）、LinkedList（对于频繁的插入、删除操作）、Vector（古老的实现类、线程安全的）
+        * |------Set接口：存储无序的，不可重复的元素
+        * |------HashSet、LinkedHashSet、TreeSet
+        * Map接口：存储“键-值”对的数据
+        * |-----HashMap、LinkedHashMap、TreeMap、Hashtable(子类：Properties)
+        */
 
-20、Set和hashCode以及equals方法的联系
-Set接口有两个子类：HashSet和TreeSet 。 
-|- HashSet 
-|- 特点：在不存在重复元素的基础上，还可以进行高速的存取元素。 
-|- 要求：需要为您的类重写hashCode()和equals()方法。 
-|- TreeSet 
-|- 特点：在不存在重复元素的基础上，还可以将元素自动排序。 
-|- 要求：需要为您的类实现Comparable接口，并重写compareTo方法。 
-|- 重写compareTo() 可以同时完成两份工作  排序和消除重复。
+### 20、Set和hashCode以及equals方法的联系
+        Set接口有两个子类：HashSet和TreeSet 。 
+        |- HashSet 
+        |- 特点：在不存在重复元素的基础上，还可以进行高速的存取元素。 
+        |- 要求：需要为您的类重写hashCode()和equals()方法。 
+        |- TreeSet 
+        |- 特点：在不存在重复元素的基础上，还可以将元素自动排序。 
+        |- 要求：需要为您的类实现Comparable接口，并重写compareTo方法。 
+        |- 重写compareTo() 可以同时完成两份工作  排序和消除重复。
 
-21、List 和 Map 区别
-1.面试题：你说说collection里面有什么子类。 
+### 21、List 和 Map 区别
+1. 面试题：你说说collection里面有什么子类。 
 （其实面试的时候听到这个问题的时候，你要知道，面试官是想考察List，Set） 
 正如图一，list和set是实现了collection接口的。 
-List：1.可以允许重复的对象。
-　　 2.可以插入多个null元素。
+
+        List：1.可以允许重复的对象。
+        2.可以插入多个null元素。
         3.是一个有序容器，保持了每个元素的插入顺序，输出的顺序就是插入的顺序。
         4.常用的实现类有 ArrayList、LinkedList 和 Vector。ArrayList 最为流行，它提供了使用索引的随意访问，而 LinkedList 则对于经常需要从 List 中添加或删除元素的场合更为合适。
-Set：1.不允许重复对象
-　　 2. 无序容器，你无法保证每个元素的存储顺序，TreeSet通过 Comparator 或者 Comparable 维护了一个排序顺序。
-        3. 只允许一个 null 元素
+        Set：1.不允许重复对象
+        2.无序容器，你无法保证每个元素的存储顺序，TreeSet通过 Comparator 或者 Comparable 维护了一个排序顺序。
+        3.只允许一个 null 元素
         4.Set 接口最流行的几个实现类是 HashSet、LinkedHashSet 以及 TreeSet。最流行的是基于 HashMap 实现的 HashSet；TreeSet 还实现了 SortedSet 接口，因此 TreeSet 是一个根据其 compare() 和 compareTo() 的定义进行排序的有序容器。
-1.Map不是collection的子接口或者实现类。Map是一个接口。
-2.Map 的 每个 Entry 都持有两个对象，也就是一个键一个值，Map 可能会持有相同的值对象但键对象必须是唯一的。
-3. TreeMap 也通过 Comparator 或者 Comparable 维护了一个排序顺序。
-4. Map 里你可以拥有随意个 null 值但最多只能有一个 null 键。
-5.Map 接口最流行的几个实现类是 HashMap、LinkedHashMap、Hashtable 和 TreeMap。（HashMap、TreeMap最常用）
-2.面试题：什么场景下使用list，set，map呢？
-（或者会问为什么这里要用list、或者set、map，这里回答它们的优缺点就可以了）
+        1.Map不是collection的子接口或者实现类。Map是一个接口。
+        2.Map 的 每个 Entry 都持有两个对象，也就是一个键一个值，Map 可能会持有相同的值对象但键对象必须是唯一的。
+        3. TreeMap 也通过 Comparator 或者 Comparable 维护了一个排序顺序。
+        4. Map 里你可以拥有随意个 null 值但最多只能有一个 null 键。
+        5.Map 接口最流行的几个实现类是 HashMap、LinkedHashMap、Hashtable 和 TreeMap。（HashMap、TreeMap最常用）
+2. 面试题：什么场景下使用list，set，map呢？
+- （或者会问为什么这里要用list、或者set、map，这里回答它们的优缺点就可以了）
 如果你经常会使用索引来对容器中的元素进行访问，那么 List 是你的正确的选择。如果你已经知道索引了的话，那么 List 的实现类比如 ArrayList 可以提供更快速的访问,如果经常添加删除元素的，那么肯定要选择LinkedList。
 如果你想容器中的元素能够按照它们插入的次序进行有序存储，那么还是 List，因为 List 是一个有序容器，它按照插入顺序进行存储。
-如果你想保证插入元素的唯一性，也就是你不想有重复值的出现，那么可以选择一个 Set 的实现类，比如 HashSet、LinkedHashSet 或者 TreeSet。所有 Set 的实现类都遵循了统一约束比如唯一性，而且还提供了额外的特性比如 TreeSet 还是一个 SortedSet，所有存储于 TreeSet 中的元素可以使用 Java 里的 Comparator 或者 Comparable 进行排序。LinkedHashSet 也按照元素的插入顺序对它们进行存储。
+- 如果你想保证插入元素的唯一性，也就是你不想有重复值的出现，那么可以选择一个 Set 的实现类，比如 HashSet、LinkedHashSet 或者 TreeSet。所有 Set 的实现类都遵循了统一约束比如唯一性，而且还提供了额外的特性比如 TreeSet 还是一个 SortedSet，所有存储于 TreeSet 中的元素可以使用 Java 里的 Comparator 或者 Comparable 进行排序。LinkedHashSet 也按照元素的插入顺序对它们进行存储。
 如果你以键和值的形式进行数据存储那么 Map 是你正确的选择。你可以根据你的后续需要从 Hashtable、HashMap、TreeMap 中进行选择。
 
-22、Arraylist 与 LinkedList 区别
-1.ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。 （LinkedList是双向链表，有next也有previous）
-2.对于随机访问get和set，ArrayList觉得优于LinkedList，因为LinkedList要移动指针。
-3.对于新增和删除操作add和remove，LinedList比较占优势，因为ArrayList要移动数据。 
+### 22、Arraylist 与 LinkedList 区别
+1. ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。 （LinkedList是双向链表，有next也有previous）
+2. 对于随机访问get和set，ArrayList觉得优于LinkedList，因为LinkedList要移动指针。
+3. 对于新增和删除操作add和remove，LinedList比较占优势，因为ArrayList要移动数据。 
 
-23、ArrayList 与 Vector 区别
-1）  Vector的方法都是同步的(Synchronized),是线程安全的(thread-safe)，而ArrayList的方法不是，由于线程的同步必然要影响性能，因此,ArrayList的性能比Vector好。 
-2） 当Vector或ArrayList中的元素超过它的初始大小时,Vector会将它的容量翻倍,而ArrayList只增加50%的大小，这样,ArrayList就有利于节约内存空间。
+### 23、ArrayList 与 Vector 区别
+1. Vector的方法都是同步的(Synchronized),是线程安全的(thread-safe)，而ArrayList的方法不是，由于线程的同步必然要影响性能，因此,ArrayList的性能比Vector好。 
+2. 当Vector或ArrayList中的元素超过它的初始大小时,Vector会将它的容量翻倍,而ArrayList只增加50%的大小，这样,ArrayList就有利于节约内存空间。
 
-24、HashMap 和 Hashtable 的区别
-HashMap是Hashtable的轻量级实现（非线程安全的实现），他们都完成了Map接口。主要的区别有：线程安全性，同步(synchronization)，以及速度。
+### 24、HashMap 和 Hashtable 的区别
+- HashMap是Hashtable的轻量级实现（非线程安全的实现），他们都完成了Map接口。主要的区别有：线程安全性，同步(synchronization)，以及速度。
 
-1.Hashtable继承自Dictionary类，而HashMap是Java1.2引进的Map interface的一个实现。
+1. Hashtable继承自Dictionary类，而HashMap是Java1.2引进的Map interface的一个实现。
 
-2.HashMap允许将null作为一个entry的key或者value，而Hashtable不允许。
+2. HashMap允许将null作为一个entry的key或者value，而Hashtable不允许。
 
-3.HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。Java 5提供了ConcurrentHashMap，它是HashTable的替代，比HashTable的扩展性更好。（在多个线程访问Hashtable时，不需要自己为它的方法实现同步，而HashMap 就必须为之提供外同步(Collections.synchronizedMap)）
+3. HashMap是非synchronized，而Hashtable是synchronized，这意味着Hashtable是线程安全的，多个线程可以共享一个Hashtable；而如果没有正确的同步的话，多个线程是不能共享HashMap的。Java 5提供了ConcurrentHashMap，它是HashTable的替代，比HashTable的扩展性更好。（在多个线程访问Hashtable时，不需要自己为它的方法实现同步，而HashMap 就必须为之提供外同步(Collections.synchronizedMap)）
 
-4.另一个区别是HashMap的迭代器(Iterator)是fail-fast迭代器，而Hashtable的enumerator迭代器不是fail-fast的。所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出ConcurrentModificationException异常。但这并不是一个一定发生的行为，要看JVM。这条同样也是Enumeration和Iterator的区别。fail-fast机制如果不理解原理，可以查看这篇文章：http://www.cnblogs.com/alexlo/archive/2013/03/14/2959233.html
+4. 另一个区别是HashMap的迭代器(Iterator)是fail-fast迭代器，而Hashtable的enumerator迭代器不是fail-fast的。所以当有其它线程改变了HashMap的结构（增加或者移除元素），将会抛出ConcurrentModificationException，但迭代器本身的remove()方法移除元素则不会抛出ConcurrentModificationException异常。但这并不是一个一定发生的行为，要看JVM。这条同样也是Enumeration和Iterator的区别。fail-fast机制如果不理解原理，可以查看这篇文章：http://www.cnblogs.com/alexlo/archive/2013/03/14/2959233.html
 
-5.由于HashMap非线程安全，在只有一个线程访问的情况下，效率要高于HashTable。
+5. 由于HashMap非线程安全，在只有一个线程访问的情况下，效率要高于HashTable。
 
-6.HashMap把Hashtable的contains方法去掉了，改成containsvalue和containsKey。因为contains方法容易让人引起误解。 
+6. HashMap把Hashtable的contains方法去掉了，改成containsvalue和containsKey。因为contains方法容易让人引起误解。 
 
-7.Hashtable中hash数组默认大小是11，增加的方式是 old*2+1。HashMap中hash数组的默认大小是16，而且一定是2的指数。
+7. Hashtable中hash数组默认大小是11，增加的方式是 old*2+1。HashMap中hash数组的默认大小是16，而且一定是2的指数。
 
-8..两者通过hash值散列到hash表的算法不一样：
+8. 两者通过hash值散列到hash表的算法不一样：
 
-25、HashSet 和 HashMap 区别
-面试中经常被问到HashMap与HashSet的区别。于是本渣静下心来总结了一下HashSet与HashMap的区别。
+### 25、HashSet 和 HashMap 区别
+1. 面试中经常被问到HashMap与HashSet的区别。于是本渣静下心来总结了一下HashSet与HashMap的区别。
+先了解一下HashMap跟HashSet
 
-　　先了解一下HashMap跟HashSet
+- HashSet：
+HashSet实现了Set接口，它不允许集合中出现重复元素。当我们提到HashSet时，第一件事就是在将对象存储在HashSet之前，要确保重写hashCode（）方法和equals（）方法，这样才能比较对象的值是否相等，确保集合中没有储存相同的对象。如果不重写上述两个方法，那么将使用下面方法默认实现：
 
- HashSet：
+        　public boolean add(Object obj)方法用在Set添加元素时，如果元素值重复时返回 "false"，如果添加成功则返回"true"
 
-　　HashSet实现了Set接口，它不允许集合中出现重复元素。当我们提到HashSet时，第一件事就是在将对象存储在
-
-HashSet之前，要确保重写hashCode（）方法和equals（）方法，这样才能比较对象的值是否相等，确保集合中没有
-
-储存相同的对象。如果不重写上述两个方法，那么将使用下面方法默认实现：
-
-　public boolean add(Object obj)方法用在Set添加元素时，如果元素值重复时返回 "false"，如果添加成功则返回"true"
-
-HashMap：
-
-　　HashMap实现了Map接口，Map接口对键值对进行映射。Map中不允许出现重复的键（Key）。Map接口有两个基本的实现
-
-TreeMap和HashMap。TreeMap保存了对象的排列次序，而HashMap不能。HashMap可以有空的键值对（Key（null）-Value（null））
-
+- HashMap：
+HashMap实现了Map接口，Map接口对键值对进行映射。Map中不允许出现重复的键（Key）。Map接口有两个基本的实现TreeMap和HashMap。TreeMap保存了对象的排列次序，而HashMap不能。HashMap可以有空的键值对（Key（null）-Value（null））
 HashMap是非线程安全的（非Synchronize），要想实现线程安全，那么需要调用collections类的静态方法synchronizeMap（）实现。
 
-public Object put(Object Key,Object value)方法用来将元素添加到map中。
+        public Object put(Object Key,Object value)方法用来将元素添加到map中。
 
-HashSet与HashMap的区别：
+- HashSet与HashMap的区别：
 
-HashMap	HashSet
-实现了Map接口	实现Set接口
-存储键值对	仅存储对象
-调用put（）向map中添加元素	调用add（）方法向Set中添加元素
-HashMap使用键（Key）计算Hashcode	
-HashSet使用成员对象来计算hashcode值，
+|HashMap|HashSet|
+|:---- |:---- |	
+|实现了Map接口	|实现Set接口|
+|存储键值对 |仅存储对象|
+|调用put（）向map中添加元素 |调用add（）方法向Set中添加元素|
+|HashMap使用键（Key）计算Hashcode|HashSet使用成员对象来计算hashcode值，对于两个对象来说hashcode可能相同，所以equals()方法用来判断对象的相等性，如果两个对象不同的话，那么返回false|
+|HashMap相对于HashSet较快，因为它是使用唯一的键获取对象	|HashSet较HashMap来说比较慢|
 
-对于两个对象来说hashcode可能相同，
+### 26、HashMap 和 ConcurrentHashMap 的区别
 
-所以equals()方法用来判断对象的相等性，
-
-如果两个对象不同的话，那么返回false
-
-HashMap相对于HashSet较快，因为它是使用唯一的键获取对象	HashSet较HashMap来说比较慢
-
-26、HashMap 和 ConcurrentHashMap 的区别
-
-27、HashMap 的工作原理及代码实现，什么时候用到红黑树
+### 27、HashMap 的工作原理及代码实现，什么时候用到红黑树
 https://blog.csdn.net/u011240877/article/details/53358305
-这里有hashmap的原理和红黑树的代码解析
+- 这里有hashmap的原理和红黑树的代码解析
 
-28、多线程情况下HashMap死循环的问题
+### 28、多线程情况下HashMap死循环的问题
 https://www.cnblogs.com/dongguacai/p/5599100.html
-这里有hashmap在多线程下死循环的代码实现和原理解析
+- 这里有hashmap在多线程下死循环的代码实现和原理解析
 
-29、ConcurrentHashMap 的工作原理及代码实现，如何统计所有的元素个数
+### 29、ConcurrentHashMap 的工作原理及代码实现，如何统计所有的元素个数
 https://blog.csdn.net/yan_wenliang/article/details/51029372
-这里有currentHashMap的具体实现，size方法就是元素个数的实现
+- 这里有currentHashMap的具体实现，size方法就是元素个数的实现
 
-30、BIO、NIO、AIO的概念
+### 30、BIO、NIO、AIO的概念
 https://blog.csdn.net/u013068377/article/details/70312551
 
-31、什么是长连接和短连接
+### 31、什么是长连接和短连接
 https://www.cnblogs.com/gotodsp/p/6366163.html
 
-32、三次握手和四次挥手、为什么挥手需要四次
+### 32、三次握手和四次挥手、为什么挥手需要四次
 https://blog.csdn.net/baixiaoshi/article/details/67712853
 
-33、MySQL 索引使用的注意事项
+### 33、MySQL 索引使用的注意事项
 https://www.cnblogs.com/heyonggang/p/6610526.html
-索引虽然好处很多，但过多的使用索引可能带来相反的问题，索引也是有缺点的：
+- 索引虽然好处很多，但过多的使用索引可能带来相反的问题，索引也是有缺点的：
 
-虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行INSERT,UPDATE和DELETE。因为更新表时，mysql不仅要保存数据，还要保存一下索引文件
-建立索引会占用磁盘空间的索引文件。一般情况这个问题不太严重，但如果你在要给大表上建了多种组合索引，索引文件会膨胀很宽
-      索引只是提高效率的一个方式，如果mysql有大数据量的表，就要花时间研究建立最优的索引，或优化查询语句。
+- 虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行INSERT,UPDATE和DELETE。因为更新表时，mysql不仅要保存数据，还要保存一下索引文件
+建立索引会占用磁盘空间的索引文件。一般情况这个问题不太严重，但如果你在要给大表上建了多种组合索引，索引文件会膨胀很宽,索引只是提高效率的一个方式，如果mysql有大数据量的表，就要花时间研究建立最优的索引，或优化查询语句。
 
-     使用索引时，有一些技巧：
+- 使用索引时，有一些技巧：
 
-    1.索引不会包含有NULL的列
+    1. 索引不会包含有NULL的列
 
        只要列中包含有NULL值，都将不会被包含在索引中，复合索引中只要有一列含有NULL值，那么这一列对于此符合索引就是无效的。
 
-    2.使用短索引
+    2. 使用短索引
 
        对串列进行索引，如果可以就应该指定一个前缀长度。例如，如果有一个char（255）的列，如果在前10个或20个字符内，多数值是唯一的，那么就不要对整个列进行索引。短索引不仅可以提高查询速度而且可以节省磁盘空间和I/O操作。
 
-    3.索引列排序
+    3. 索引列排序
 
        mysql查询只使用一个索引，因此如果where子句中已经使用了索引的话，那么order by中的列是不会使用索引的。因此数据库默认排序可以符合要求的情况下不要使用排序操作，尽量不要包含多个列的排序，如果需要最好给这些列建复合索引。
 
-    4.like语句操作
+    4. like语句操作
 
       一般情况下不鼓励使用like操作，如果非使用不可，注意正确的使用方式。like ‘%aaa%’不会使用索引，而like ‘aaa%’可以使用索引。
 
-    5.不要在列上进行运算
+    5. 不要在列上进行运算
 
-    6.不使用NOT IN 、<>、！=操作，但<,<=，=，>,>=,BETWEEN,IN是可以用到索引的
+    6. 不使用NOT IN 、<>、！=操作，但<,<=，=，>,>=,BETWEEN,IN是可以用到索引的
 
-    7.索引要建立在经常进行select操作的字段上。
+    7. 索引要建立在经常进行select操作的字段上。
+        这是因为，如果这些列很少用到，那么有无索引并不能明显改变查询速度。相反，由于增加了索引，反而降低了系统的维护速度和增大了空间需求。
 
-       这是因为，如果这些列很少用到，那么有无索引并不能明显改变查询速度。相反，由于增加了索引，反而降低了系统的维护速度和增大了空间需求。
+    8. 索引要建立在值比较唯一的字段上。
 
-    8.索引要建立在值比较唯一的字段上。
+    9. 对于那些定义为text、image和bit数据类型的列不应该增加索引。因为这些列的数据量要么相当大，要么取值很少。
 
-    9.对于那些定义为text、image和bit数据类型的列不应该增加索引。因为这些列的数据量要么相当大，要么取值很少。
+    10. 在where和join中出现的列需要建立索引。
 
-    10.在where和join中出现的列需要建立索引。
+    11. where的查询条件里有不等号(where column != …),mysql将无法使用索引。
 
-    11.where的查询条件里有不等号(where column != …),mysql将无法使用索引。
+    12. 如果where字句的查询条件里使用了函数(如：where DAY(column)=…),mysql将无法使用索引。
 
-    12.如果where字句的查询条件里使用了函数(如：where DAY(column)=…),mysql将无法使用索引。
+    13. 在join操作中(需要从多个数据表提取数据时)，mysql只有在主键和外键的数据类型相同时才能使用索引，否则及时建立了索引也不会使用。
 
-    13.在join操作中(需要从多个数据表提取数据时)，mysql只有在主键和外键的数据类型相同时才能使用索引，否则及时建立了索引也不会使用。
-
-34、DDL、DML、DCL分别指什么
-DML（data manipulation language）： 
+### 34、DDL、DML、DCL分别指什么
+- DML（data manipulation language）： 
 它们是SELECT、UPDATE、INSERT、DELETE，就象它的名字一样，这4条命令是用来对数据库里的数据进行操作的语言 
-DDL（data definition language）： 
+- DDL（data definition language）： 
 DDL比DML要多，主要的命令有CREATE、ALTER、DROP等，DDL主要是用在定义或改变表（TABLE）的结构，数据类型，表之间的链接和约束等初始化工作上，他们大多在建立表时使用 
-DCL（Data Control Language）： 
+- DCL（Data Control Language）： 
 是数据库控制功能。是用来设置或更改数据库用户或角色权限的语句，包括（grant,deny,revoke等）语句。在默认状态下，只有sysadmin,dbcreator,db_owner或db_securityadmin等人员才有权力执行DCL 
 
-35、
-ACID一般是指数据库事务正确执行的几个基本要求。需要undo和redo的底层支持。
-
-1.原子性(Atomicity):事务要么成功(可见)，要么失败(不可见)。不存在事务部分成功的情况。
+### 35、ACID一般是指数据库事务正确执行的几个基本要求。需要undo和redo的底层支持。
+- 原子性(Atomicity):事务要么成功(可见)，要么失败(不可见)。不存在事务部分成功的情况。
 
         当我们修改一条数据，我们同时生成一条undo记录描述如何撤销这个修改。这就意味着当我们处在事务处理中时，如果另外一个用户试图查看正在被我们修改的数据，会被告知需要使用undo记录，构造数据被修改之前的状态。这就使得修改只有在提交之后才可见。保证了其他用户要么看到事务的全部或者啥也看不到。
 
 
-2.一致性(Consistency)：数据库在事务开始前和结束后都应该是一致的。
+- 一致性(Consistency)：数据库在事务开始前和结束后都应该是一致的。
+        
         一致性要求数据库在任何时候都是处于一个一致、合法的状态。我们可能会说undo数据的存在意味着其他用户会被阻止看到事务中间过程的数据，因此，看不到数据库从一个合法的状态到另外一个暂时的不合法状态，他们看到的要么是事务之前的状态要么是事务之后的状态。(数据库内部当然能看到中间过程的状态数据，而且有些时候很有用，但是终端用户看不到不一致的数据)。假入银行有A、B两个用户，账户余额都是100元。现在A用户向B用户转账50元。过程如下：
         事务开始
         1.A用户账户减去50元
@@ -521,19 +451,15 @@ ACID一般是指数据库事务正确执行的几个基本要求。需要undo和
         事务结束        
         在事务的第1步之后的这个中间状态，A用户账户余额为50元，B用户账户余额还没有增加，还是100元，这就是一个事务中间的非一致状态。但是我们知道，事务要么成功，要么失败，不存在部分成功，所以，用户看到的数据，永远是一致的。
 
-3.隔离性(Isolation):一个事务不会看到另外一个还未完成的事务产生的结果。每个事务就像在单独、隔离的环境下运行一样。
+- 隔离性(Isolation):一个事务不会看到另外一个还未完成的事务产生的结果。每个事务就像在单独、隔离的环境下运行一样。
+        
         我们已经知道undo数据使得用户看不到事务的中间数据直到我们提交了修改。实际上，我们走的更远：undo数据使得其他事务在整个事务过程中，不必受到我们事务的影响(这个不是Oracle默认的隔离级别，但是支持)。当然，当2个用户同时去修改同样的数据时，还是会发生问题。完美的隔离是不可能的，因为事实上一个事务必须在有限的时间内完成。
 
-4.持久性(Durability)：成功提交的事务，数据是持久保留，不会因为系统失败而丢失。
+- 持久性(Durability)：成功提交的事务，数据是持久保留，不会因为系统失败而丢失。
+        
         持久性是redo日志提供的一大好处。你怎么保证提交的事务数据在系统失败的情况下也不会丢失？很明显的策略就是不停地把redo日志写到磁盘。如果你没有redo日志，当你修改数据的时候，这就可能意味着你要做很多数据块的随机写。想象一下你往表order_lines中插入10条数据，表上面有3个索引。这个可能需要31个随机的分散的磁盘写操作，让1个表数据块和31个索引块数据持久保存下来。但是Oracle有redo机制。你只要保留少量的关于修改的日志，而不是整个你修改的数据块。31条修改日志最后可能只是1个顺序写操作。
 
-
-
-
-
-
-
-未实现区域
+# 未实现区域
 1.3、进程和线程
 
 线程和进程的概念、并行和并发的概念
