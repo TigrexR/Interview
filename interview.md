@@ -651,6 +651,15 @@ https://blog.csdn.net/tolcf/article/details/50925145
 ### 39.说说 Semaphore 原理
 https://blog.csdn.net/buyaoxx/article/details/77935730
 
+### 40.osi七层网络模型，五层网络模型，每次层分别有哪些协议
+https://blog.csdn.net/huangjin0507/article/details/51613561
+
+### 41.死锁产生的条件， 以及如何避免死锁，银行家算法，产生死锁后如何解决
+https://blog.csdn.net/L_XRUI/article/details/72935173
+
+### 42.如何判断链表有环
+https://blog.csdn.net/sinat_35261315/article/details/79205157
+
 ### 说说 Exchanger 原理
 https://blog.csdn.net/coslay/article/details/45242581
 
