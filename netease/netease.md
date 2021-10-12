@@ -94,7 +94,7 @@
    - jdk动态代理
    - cglib动态代理
 5. 多线程、线程池
-6. BIO、NIO、AIO、Netty使用
+6. IO、BIO、NIO、AIO、Netty使用
 7. JVM
 
 ### 2、Spring全家桶、Mybtais
@@ -253,6 +253,7 @@
    - 绑定 routing key 绑定关系和交换器类型也有关系
    - 重复推送、重复消费、消费确认机制
 2. Kafka
+3. RocketMQ
 
 ### 9、Nginx、Docker
 
