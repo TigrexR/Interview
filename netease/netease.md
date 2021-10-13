@@ -70,7 +70,6 @@
     |速度   |它比接口速度要快   |接口是稍微有点慢的，因为它需要时间去寻找在类中实现的方法。|
     |添加新方法   |如果你往抽象类中添加新的方法，你可以给它提供默认的实现。因此你不需要改变你现在的代码。 |如果你往接口中添加方法，那么你必须改变实现该接口的类。|
 3. 关键字
-   - volite
    - final、finally、finalize的区别
       - final修饰符（关键字）。被final修饰的类，就意味着不能再派生出新的子类，不能作为父类而被子类继承。因此一个类不能既被abstract声明，又被final声明。将变量或方法声明为final，可以保证他们在使用的过程中不被修改。被声明为final的变量必须在声明时给出变量的初始值，而在以后的引用中只能读取。被final声明的方法也同样只能使用，即不能方法重写。
       - finally是在异常处理时提供finally块来执行任何清除操作。不管有没有异常被抛出、捕获，finally块都会被执行。try块中的内容是在无异常时执行到结束。catch块中的内容，是在try块内容发生catch所声明的异常时，跳转到catch块中执行。finally块则是无论异常是否发生，都会执行finally块的内容，所以在代码逻辑中有需要无论发生什么都必须执行的代码，就可以放在finally块中。
@@ -94,8 +93,30 @@
    - jdk动态代理
    - cglib动态代理
 5. 多线程、线程池
+   - 多线程基础知识
+      - 线程概念：是一个正在运行的函数
+      - 线程实现：继承Thread、实现Runnable接口、实现Callable接口
+      - 线程状态
+        - NEW：初始状态，线程被构建，但是还没有调用 start()方法
+        - RUNNABLE：可运行状态，可运行状态可以包括：运行中状态和就绪状态
+        - BLOCKED：阻塞状态，处于这个状态的线程需要等待其他线程释放锁或者等待进入synchronized
+        - WAITING：表示等待状态，处于该状态的线程需要等待其他线程对其进行通知或中断等操作，进而进入下一个状态
+        - TIME_WAITING：超时等待状态。可以在一定的时间自行返回
+        - TERMINATED：终止状态，当前线程执行完毕
+        - 线程对象都存在wait、notify、synchronized同步方法，并且每个对象都存在monitor，用于监控对象，wait、notify必须存在于synchronized代码块中
+      - volatile
+        - 被volatile修饰的变量，每一次处理的时候，都会将main memory（主存）中的值load到working memory（线程栈）中，然后修改，然后将自身线程栈的变量再同步会主存中，每次变量操作都激发一次load and save
+        - volatile可以保证线程可见性，并能防止指令重排，但是不能保证变量操作原子性
+      - 多线程相关类
+        - 原子操作类：AtomicBoolean、AtomicInteger、AtomicLong、AtomicDouble、AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray、AtomicReference、AtomicReferenceFieldUpdater、AtomicMarkableReference、AtomicIntegerFieldUpdater、AtomicLongFileUpdater、AtomicStampedReference，这些原子操作类都基于Unsafe类中的CAS保证数据变更的原子性
+        - 容器类
+          - ConcurrentHashMap
+   - 线程池种类
+      ```
+      ```
 6. IO、BIO、NIO、AIO、Netty使用
 7. JVM
+   - 内存分区
 
 ### 2、Spring全家桶、Mybtais
 
@@ -105,6 +126,9 @@
 3. feign
 
 ### 4、Dubbo组件知识
+1. sentinel
+2. dubbo
+3. seata
 
 ### 5、Zookeeper、Eureka、Nacos
 
