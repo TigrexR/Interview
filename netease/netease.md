@@ -8,7 +8,7 @@
       - equal()相等的两个对象他们的hashCode()肯定相等，也就是用equal()对比是绝对可靠的。
       - hashCode()相等的两个对象他们的equal()不一定相等，也就是hashCode()不是绝对可靠的。
       - 所有对于需要大量并且快速的对比的话如果都用equal()去做显然效率太低，所以解决方式是，每当需要对比的时候，首先用hashCode()去对比，如果hashCode()不一样，则表示这两个对象肯定不相等（也就是不必再用equal()去再对比了）,如果hashCode()相同，此时再对比他们的equal()，如果equal()也相同，则表示这两个对象是真的相同了，这样既能大大提高了效率也保证了对比的绝对正确性！
-   - Integer、AtomicInteger
+   - Integer
       - 答案： Integer类型的赋予int值时，会调用Integer的valueOf方法，然后valueOf方法在赋值的时候会判断int值是否在-128到127之间，如果是，那么会将这个Integer对象存到静态常量池中cache数组，重复利用，如果不是在这个范围内，那么会新建一个Integer对象并返回
       - int与Integer的基本使用对比
          - Integer是int的包装类；int是基本数据类型
@@ -21,7 +21,6 @@
          - 非new生成的Integer变量和new Integer()生成的变量比较时，结果为false。因为非new生成的Integer变量指向的是静态常量池中cache数组中存储的指向了堆中的Integer对象，而new Integer()生成的变量指向堆中新建的对象，两者在内存中的对象引用（地址）不同。
          - 对于两个非new生成的Integer对象，进行比较时，如果两个变量的值在区间-128到127之间，则比较结果为true，如果两个变量的值不在此区间，则比较结果为false；原因： java在编译Integer i = 100 ;时，会翻译成为Integer i = Integer.valueOf(100)。而java API中对Integer类型的valueOf的定义如下，对于-128到127之间的数，会进行缓存，Integer i = 127时，会将127这个Integer对象进行缓存，下次再写Integer j = 127时，就会直接从缓存中取，就不会new了
       - https://blog.csdn.net/chenliguan/article/details/53888018
-      - AtomicInteger保证并发原子性，incrementAndGet方法实现，compareAndSet方法调用Unsafe.compareAndSwapInt()方法，即Unsafe类的CAS操作
    - String、StringBuilder、StringBuffer
       - String 存在两种创建方式，创建之后对象的内存地址不同
         ```
