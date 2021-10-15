@@ -102,7 +102,7 @@
         - WAITING：表示等待状态，处于该状态的线程需要等待其他线程对其进行通知或中断等操作，进而进入下一个状态
         - TIME_WAITING：超时等待状态。可以在一定的时间自行返回
         - TERMINATED：终止状态，当前线程执行完毕
-        - 线程对象都存在wait、notify、synchronized同步方法，并且每个对象都存在monitor，用于监控对象，wait、notify必须存在于synchronized代码块中
+      - 线程对象都存在wait、notify、synchronized同步方法，并且每个对象都存在monitor，用于监控对象，wait、notify必须存在于synchronized代码块中
       - volatile
         - 被volatile修饰的变量，每一次处理的时候，都会将main memory（主存）中的值load到working memory（线程栈）中，然后修改，然后将自身线程栈的变量再同步会主存中，每次变量操作都激发一次load and save
         - volatile可以保证线程可见性，并能防止指令重排，但是不能保证变量操作原子性
@@ -110,14 +110,72 @@
         - 原子操作类：AtomicBoolean、AtomicInteger、AtomicLong、AtomicDouble、AtomicIntegerArray、AtomicLongArray、AtomicReferenceArray、AtomicReference、AtomicReferenceFieldUpdater、AtomicMarkableReference、AtomicIntegerFieldUpdater、AtomicLongFileUpdater、AtomicStampedReference，这些原子操作类都基于Unsafe类中的CAS保证数据变更的原子性
         - 容器类
           - ConcurrentHashMap
+          - Collections的并发包装方法
+          - Queue
    - 线程池种类
-      ```
-      ```
+     - jdk基本线程池相关接口和类
+       - 接口：Executor、ExecutorService、ScheduledExecutorService
+       - 抽象类：AbstractExecutorService，实现类：ForkJoinPool、ThreadPoolExecutor、ScheduledThreadPoolExecutor，工具类：Executors
+     - spring线程池相关接口类
+       - 接口：TaskExecutor、AsyncTaskExecutor、AsyncListenableTaskExecutor、SchedulingTaskExecutor
+       - 实现类：ThreadPoolTaskExecutor
+        ```
+        corePoolSize：线程池维护线程最小的数量，默认为1
+        maxPoolSize：线程池维护线程最大数量，默认为Integer.MAX_VALUE
+        keepAliveSeconds：(maxPoolSize-corePoolSize)部分线程空闲最大存活时间，默认存活时间是60s
+        queueCapacity：阻塞任务队列的大小，默认为Integer.MAX_VALUE，默认使用LinkedBlockingQueue
+        allowCoreThreadTimeOut：设置为true的话，keepAliveSeconds参数设置的有效时间对corePoolSize线程也有效，默认是flase
+        threadFactory：：用于设置创建线程的工厂，可以通过线程工厂给每个创建出来的线程设置更有意义的名字。使用开源框架guava提供的ThreadFactoryBuilder可以快速给线程池里的线程设置有意义的名字
+        rejectedExecutionHandler：拒绝策略，当队列workQueue和线程池maxPoolSize都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新任务时抛出异常，有以下四种策略，当然也可以根据实际业务需求类实现RejectedExecutionHandler接口实现自己的处理策略
+          ①AbortPolicy：丢弃任务，并且抛出RejectedExecutionException异常
+          ②DiscardPolicy：丢弃任务，不处理，不抛出异常
+          ③CallerRunsPolicy：只用调用者所在线程来运行任务
+          ③DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务，并且重复该操作
+        ```
 6. IO、BIO、NIO、AIO、Netty使用
 7. JVM
-   - 内存分区
+   - 分区
+     - 程序计数器：用于记录下一条要执行的指令，每个线程都有自己的程序计数器，配合线程栈用于在线程调度时的线程上下文切换。执行本地方法时程序计数器中没有值或为undefined
+     - 虚拟机方法栈：Java的栈，每个线程有一个线程调用栈，栈的元素是栈帧。栈帧包括：局部变量表、操作数栈、指向堆中对象的引用、返回地址、附加信息。每个方法调用时，回向当前指向的线程栈顶部压入一个栈帧，栈帧的大小是固定的，虚拟机通过解析.class文件可以得知
+     - 本地方法栈：native方法调用时的方法调用栈，存储本地栈帧
+     - 堆：堆是所有Java线程共享的一个内存区域，用于分配对象
+        - jdk8之前HotSpot分为新生代、老年代、永久代, 永久代的一部分就是方法区的实现，占用一部分堆内存，永久代不参与垃圾回收
+        - jdk8之后HotSpot分为新生代（Eden+From Survivor+To Survivor）、老年代（OldGen），堆中会存字符串常量池、静态变量
+     - 方法区：存储类的信息（类名、方法信息、字段信息）、静态变量、常量池
+        - jdk8之后方法区由元空间(Metaspace)代替，存储在本地内存，不在虚拟机中，存储类的信息（类名、方法信息、字段信息）、常量池（包括常量和运行时常量池）
 
-### 2、Spring全家桶、Mybtais
+### 2、Tomcat、Spring全家桶、Mybtais
+1. tomcat
+2. spring
+   - DI：依赖注入，通过反射将属性和依赖对象注入到一个对象中
+   - IOC：控制反转，将对象的加载、连接（验证、准备、解析）、初始化、卸载托管给spring的ioc容器管理（bean工厂），通过di完成类的加载、连接、初始化，通过动态代理对类的方法进行增强
+   - BeanFactory和ApplicationContex：BeanFactory 可以理解为含有 bean 集合的工厂类，BeanFactory 包含了种 bean 的定义，以便在接收到客户端请求时将对应的 bean 实例化。BeanFactory 还能在实例化对象的时生成协作类之间的关系。此举将 bean 自身与 bean 客户端的配置中解放出来。BeanFactory 还包含 了 bean 生命周期的控制，调用客户端的初始化方法（initialization methods）和销毁方法（destruction methods）。而ApplicationContex是对BeanFactory的增强。
+      ```
+      增强点
+      提供了支持国际化的文本消息
+      统一的资源文件读取方式
+      已在监听器中注册的 bean 的事件
+      ```
+   - Bean的生命周期
+     1. Spring对Bean进行实例化
+     2. Spring将值和Bean的引用注入进Bean对应的属性中
+        - 如果Bean实现了BeanNameAware接口，Spring将Bean的ID传递给setBeanName()方法（实现BeanNameAware清主要是为了通过Bean的引用来获得Bean的ID，一般业务中是很少有用到Bean的ID的）
+        - .如果Bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory(BeanFactory bf)方法并把BeanFactory容器实例作为参数传入。（实现BeanFactoryAware 主要目的是为了获取Spring容器，如Bean通过Spring容器发布事件等）
+        - 如果Bean实现了ApplicationContextAware接口，Spring容器将调用setApplicationContext(ApplicationContext ctx)方法，把y应用上下文作为参数传入。(作用与BeanFactory类似都是为了获取Spring容器，不同的是Spring容器在调用setApplicationContext方法时会把它自己作为setApplicationContext 的参数传入，而Spring容器在调用setBeanDactory前需要程序员自己指定（注入）setBeanDactory里的参数BeanFactory )
+     3. 如果Bean实现了BeanPostProcessor接口，Spring将调用它们的postProcessBeforeInitialization（预初始化）方法。（作用是在Bean实例创建成功后对进行增强处理，如对Bean进行修改，增加某个功能）
+     4. 如果Bean实现了InitializingBean接口，Spring将调用它们的afterPropertiesSet方法，作用与在配置文件中对Bean使用init-method声明初始化的作用一样，都是在Bean的全部属性设置成功后执行的初始化方法
+     5. 如果Bean实现了BeanPostProcessor接口，Spring将调用它们的postProcessAfterInitialization（后初始化）方法（作用与3的一样，只不过3是在Bean初始化前执行的，而这个是在Bean初始化后执行的，时机不同 )
+     6. 经过以上的工作后，Bean将一直驻留在应用上下文中给应用使用，直到应用上下文被销毁
+     7. 如果Bean实现了DisposableBean接口，Spring将调用它的destory方法，作用与在配置文件中对Bean使用destory-method属性的作用一样，都是在Bean实例销毁前执行的方法
+   - Bean的作用域
+     - singleton：这种 bean 范围是默认的，这种范围确保不管接受到多少个请求，每个容器中只有一个bean 的实例，单例的模式由 bean factory 自身来维护
+     - prototype：原形范围与单例范围相反，为每一个 bean 请求提供一个实例
+     - request：在请求 bean 范围内会每一个来自客户端的网络请求创建一个实例，在请求完成以后，bean 会失效并被垃圾回收器回收
+     - session：与请求范围类似，确保每个 session 中有一个 bean 的实例，在 session 过期后，bean会随之失效
+     - global- session：global-session 和 Portlet 应用相关。当你的应用部署在 Portlet 容器中工作时，它包含很多 portlet。如果 你想要声明让所有的 portlet 共用全局的存储变量的话，那么这全局变量需要存储在 global-session 中。全局作用域与 Servlet 中的 session 作用域效果相同
+3. springmvc
+4. springboot
+5. mybatis
 
 ### 3、OpenFeign组件知识
 1. hystrix
