@@ -25,6 +25,7 @@
 - jackson、fastjson（ASM）、protoBuf
 - zookeeper、eureka、nacos
 - 网关、springcloud-gateway
+- slueth、zipkin（链路追踪）
 - dubbo、dubbo3.0、sentinel -> alibaba tcp、http2.0
 - feign、ribbon、hystrix -> openFeign http、http2.0
 - qlExpress（ANTLR）、groove（JIT）、drools、flink（流式数据库）
