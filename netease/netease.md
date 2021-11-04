@@ -132,6 +132,7 @@
           ③CallerRunsPolicy：只用调用者所在线程来运行任务
           ③DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务，并且重复该操作
         ```
+   - Threadlocal：存储一个ThreadLocalMap的数据，key使用的是弱引用WeakReference，每个线程都会维护一个自生的Threadlocal，Entry是没有next字段，不是一个链表
 6. IO、BIO、NIO、AIO、Netty使用
 7. JVM
    - 分区
@@ -143,9 +144,32 @@
         - jdk8之后HotSpot分为新生代（Eden+From Survivor+To Survivor）、老年代（OldGen），堆中会存字符串常量池、静态变量
      - 方法区：存储类的信息（类名、方法信息、字段信息）、静态变量、常量池
         - jdk8之后方法区由元空间(Metaspace)代替，存储在本地内存，不在虚拟机中，存储类的信息（类名、方法信息、字段信息）、常量池（包括常量和运行时常量池）
-
+- 类加载过程
+   - 加载（Loading）
+      1. 通过类的全限定名来定义此类的二进制字节流
+      2. 将此类的二进制字节流所代表的静态存储结构转化成方法区的运行时数据结构
+      3. 在内存中生成这个类的java.lang.Class对象，作为方法区这个类的各种数据的访问入口
+   - 连接（Linking）
+      - 验证（Verification）：验证Class文件的字节流是否符合当前虚拟机的要求
+      - 准备（Preparation）：为类分配内存，并为变量（类变量static修饰的变量）分配初始值，这个初始值是基本变量的初始化值，不是代码定义的值
+      - 解析（Resolution）
+   - 初始化（Initialization）
+   - 初始化触发时点
+      1. 遇到new、getstatic、putstatic、invokestatic四个指令码的时候，类没有初始化、需要初始化
+      2. 使用java.lang.reflect对类进行反射调用的时候，如果类没有初始化，需要进行初始化
+      3. 当类初始化的时候发现父类没有初始化，先初始化这个父类
+      4. 当虚拟机启动的时候，用户指定一个执行主类main，初始化这个类
+      5. 当使用jdk1.7的动态语句支持时，如果一个java.lang.invoke.MethodHandle实例最后解析结果为REF_getStatic、REF_putStatic、REF_invokeStatic句柄时，并且这个方法句柄对应的类没有初始化，那么需要初始化这个类
+   - 使用（Using）
+   - 卸载（Unloading）
+   - 类加载器：启动类加载器->扩展类加载器->启动程序类加载器->自定义类加载器
+   - 类文件结构
+   - 内存管理机制、垃圾收集器逻辑
+   - 编译期优化、运行期优化
+   - 性能监控、故障处理、实战
 ### 2、Tomcat、Spring全家桶、Mybtais
 1. tomcat
+   - 鲁班大叔
 2. spring
    - DI：依赖注入，通过反射将属性和依赖对象注入到一个对象中
    - IOC：控制反转，将对象的加载、连接（验证、准备、解析）、初始化、卸载托管给spring的ioc容器管理（bean工厂），通过di完成类的加载、连接、初始化，通过动态代理对类的方法进行增强
@@ -174,6 +198,18 @@
      - session：与请求范围类似，确保每个 session 中有一个 bean 的实例，在 session 过期后，bean会随之失效
      - global- session：global-session 和 Portlet 应用相关。当你的应用部署在 Portlet 容器中工作时，它包含很多 portlet。如果 你想要声明让所有的 portlet 共用全局的存储变量的话，那么这全局变量需要存储在 global-session 中。全局作用域与 Servlet 中的 session 作用域效果相同
 3. springmvc
+   - springmvc 接收请求流程
+      - 用户发送请求至前端控制器DispatcherServlet
+      - DispatcherServlet收到请求调用HandlerMapping处理器映射器
+      - 处理器映射器找到具体的处理器(可以根据 xml 配置、注解进行查找)，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet
+      - DispatcherServlet调用HandlerAdapter处理器适配器
+      - HandlerAdapter经过适配调用具体的处理器(Controller，也叫后端控制器)
+      - Controller执行完成返回ModelAndView
+      - HandlerAdapter将controller执行结果ModelAndView返回给DispatcherServlet
+      - DispatcherServlet将ModelAndView传给ViewReslover视图解析器
+      - ViewReslover解析后返回具体View
+      - DispatcherServlet根据View进行渲染视图（即将模型数据填充至视图中）
+      - DispatcherServlet响应用户
 4. springboot
 5. mybatis
 
@@ -298,6 +334,95 @@
          - Green：所有主分片和备份分片都准备就绪（分配成功），即使有一台机器挂了（假设一台机器一个实例），数据都不会丢失，但会变成Yellow状态。
          - Yellow：所有主分片准备就绪，但存在至少一个主分片（假设是A）对应的备份分片没有就绪，此时集群属于警告状态，意味着集群高可用和容灾能力下降，如果刚好A所在的机器挂了，并且你只设置了一个备份（已处于未就绪状态），那么A的数据就会丢失（查询结果不完整），此时集群进入Red状态。
          - Red：至少有一个主分片没有就绪（直接原因是找不到对应的备份分片成为新的主分片）,此时查询的结果会出现数据丢失（不完整）。
+   - 操作语法
+      - 创建索引并查看
+        ```
+        PUT /customer
+        GET /_cat/indices?v
+        ```
+      - 删除索引并查看
+        ```
+        DELETE /customer
+        GET /_cat/indices?v
+        ```
+      - 查看文档的类型
+        ```
+        GET /bank/account/_mapping
+        ```
+      - 在索引中添加文档
+        ```
+        PUT /customer/doc/1
+        {
+          "name": "John Doe"
+        }
+        ```
+      - 查看索引中的文档
+        ```
+        GET /customer/doc/1
+        ```
+      - 修改索引中的文档
+        ```
+        POST /customer/doc/1/_update
+        {
+          "doc": { "name": "Jane Doe" }
+        }
+        ```
+      - 删除索引中的文档
+        ```
+        DELETE /customer/doc/1
+        ```
+      - 对索引中的文档执行批量操作
+        ```
+        POST /customer/doc/_bulk
+        {"index":{"_id":"1"}}
+        {"name": "John Doe" }
+        {"index":{"_id":"2"}}
+        {"name": "Jane Doe" }
+        ```
+      - 最简单的搜索，使用match_all来表示，例如搜索全部
+        ```
+        GET /bank/_search
+        {
+          "query": { "match_all": {} }
+        }
+        ```
+      - 分页搜索，from表示偏移量，从0开始，size表示每页显示的数量
+        ```
+        GET /bank/_search
+        {
+          "query": { "match_all": {} },
+          "from": 0,
+          "size": 10
+        }
+        ```
+      - 搜索排序，使用sort表示，例如按balance字段降序排列
+        ```
+        GET /bank/_search
+        {
+          "query": { "match_all": {} },
+          "sort": { "balance": { "order": "desc" } }
+        }
+        ```
+      - 搜索并返回指定字段内容，使用_source表示，例如只返回account_number和balance两个字段内容
+        ```
+        GET /bank/_search
+        {
+          "query": { "match_all": {} },
+          "_source": ["account_number", "balance"]
+        }
+        ```
+      - 条件搜索，使用match表示匹配条件，例如搜索出account_number为20的文档
+        ```
+        GET /bank/_search
+        {
+          "query": {
+            "match": {
+              "account_number": 20
+            }
+          }
+        }
+        ```
+      - 
 3. MongoDB
    - 基础特性
       - 面向文档存储，基于JSON/BSON 可表示灵活的数据结构
@@ -337,6 +462,9 @@
    - 绑定 routing key 绑定关系和交换器类型也有关系
    - 重复推送、重复消费、消费确认机制
 2. Kafka
+   - tоpic 数据主题，是Kafka中用来代表一个数据流的一个抽象。发布数据时，可用topic对数据进行分类，也作为订阅数据时的主题。一个topic同时可有多个producer、 consumer
+   - Partition(分片) 每个partition是一个顺序的、不可变的record序列，partition中的record会被分配一个自增长的id，我们称之为offset(偏移量)
+   - Replication(复制) 每个partition还会被复制到其它服务器作为replication，这是一种冗余备份策略
 3. RocketMQ
 
 ### 9、Nginx、Docker
@@ -344,3 +472,11 @@
 ### 10、Linux基本命令
 
 ### 11、八大排序算法
+- 插入排序-直接插入排序
+- 插入排序-希尔排序
+- 选择排序-简单选择排序、二元选择排序
+- 选择排序—堆排序
+- 交换排序—冒泡排序
+- 交换排序—快速排序
+- 归并排序
+- 基数排序
