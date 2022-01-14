@@ -1,9 +1,13 @@
 # 吾生也有涯，而知也无涯。以有涯随无涯，殆已！学如不及，犹恐失之。
+- 网络
+   - TCP、UDP
+   - HTTP
+   - session、cookie
 - JAVA
    - jdk8、jdk11、jdk17
-   - synchronized、threadPool、localthread
+   - synchronized、threadPool、localthread、cas、aqs
    - bio、nio、aio、netty
-   - jvm
+   - jvm、GI、ZGC、hotspot
 - data structure
    - set、list、map、tree
       - 红黑树
@@ -22,21 +26,24 @@
    - spring、ioc、aop
    - springmvc
    - springboot
-   - springcloud
-   - mybatis
-   - 网络、http、tcp、session、cookie、jwt
-- jackson、fastjson（ASM）、protoBuf
+   - mybatis、mybatis-plus
+   - druid、hikariCP
+   - 基础组件项目：https://github.com/TigrexR/geo
+- javassist、java-agent、ASM、jacoco、AST、ANTLR
+- jwt、token
+- jackson、fastjson、protoBuf
 - zookeeper、eureka、nacos
 - 网关、springcloud-gateway
-- slueth、zipkin（链路追踪）
+- slueth（阿里流量监控）、zipkin（链路追踪）
 - dubbo、dubbo3.0、sentinel -> alibaba tcp、http2.0
-- feign、ribbon、hystrix -> openFeign http、http2.0
-- qlExpress（ANTLR）、groove（JIT）、drools、flink（流式数据库）
+- feign、ribbon、hystrix -> open-feign http、http2.0
+- qlExpress、groovy、drools、flink（流式数据库）
 - springcloud-data-stream
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
-- rabbitmq、rocketmq、kafka
-- docker、k8s、Serve Mesh、ELK、jenkins、vue、nodeJS
+- kafka、rabbitmq、rocketmq
+- docker、k8s、Serve Mesh、ELK、jenkins
+- vue、nodeJS、single-spa
 - 设计模式、微服务、DDD
 
 ### 篮球论坛
