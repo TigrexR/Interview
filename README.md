@@ -29,7 +29,7 @@
    - mybatis、mybatis-plus
    - druid、hikariCP
    - 基础组件项目：https://github.com/TigrexR/geo
-- javassist、java-agent、ASM、jacoco、AST、ANTLR
+- javassist、ASM、java-agent、jacoco、AST、ANTLR
 - jwt、token
 - jackson、fastjson、protoBuf
 - zookeeper、eureka、nacos
