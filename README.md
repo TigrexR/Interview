@@ -34,7 +34,7 @@
 - jackson、fastjson、protoBuf
 - zookeeper、eureka、nacos
 - 网关、springcloud-gateway
-- slueth（阿里流量监控）、zipkin（链路追踪）
+- slueth（阿里流量监控）、zipkin（链路追踪）、arthas
 - dubbo、dubbo3.0、sentinel -> alibaba tcp、http2.0
 - feign、ribbon、hystrix -> open-feign http、http2.0
 - qlExpress、groovy、drools、flink（流式数据库）
