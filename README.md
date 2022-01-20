@@ -5,14 +5,14 @@
    - session、cookie
 - JAVA
    - jdk8、jdk11、jdk17
-   - synchronized、threadPool、localthread、cas、aqs
+   - synchronized、thread pool、localthread、cas、aqs、unsafe
    - bio、nio、aio、netty
    - jvm、GI、ZGC、hotspot
 - data structure
    - set、list、map、tree
-      - 红黑树
-      - b+tree
-      - b*tree
+    - 红黑树
+    - b+tree
+    - b*tree
    - 八大排序算法
    - 插入排序-直接插入排序
    - 插入排序-希尔排序
@@ -22,6 +22,7 @@
    - 交换排序—快速排序
    - 归并排序
    - 基数排序
+   - 代码：https://github.com/TigrexR/DataStruct
 - Web基础组件
    - spring、ioc、aop
    - springmvc
@@ -29,19 +30,39 @@
    - mybatis、mybatis-plus
    - druid、hikariCP
    - 基础组件项目：https://github.com/TigrexR/geo
-- javassist、ASM、java-agent、jacoco、AST、ANTLR
+- JVM字节码编制技术
+   - ASM 
+   - javassist
+   - byte-buddy
+   - java-agent
+   - jacoco
+   - AST、ANTLR
+   - 基础组件项目：https://github.com/TigrexR/bytecode-springboot-demo
 - jwt、token
 - jackson、fastjson、protoBuf
 - zookeeper、eureka、nacos
 - 网关、springcloud-gateway
 - slueth（阿里流量监控）、zipkin（链路追踪）、arthas
-- dubbo、dubbo3.0、sentinel -> alibaba tcp、http2.0
-- feign、ribbon、hystrix -> open-feign http、http2.0
-- qlExpress、groovy、drools、flink（流式数据库）
-- springcloud-data-stream
+- DUBBO rpc
+   - dubbo、dubbo3.0
+   - sentinel 
+   - -> alibaba tcp、http2.0
+   - 基础组件项目：https://github.com/TigrexR/dubbo-springboot-demo
+- OPEN-FEIGN rpc
+   - feign
+   - ribbon
+   - hystrix 
+   - -> open-feign http、http2.0
+   - 基础组件项目：https://github.com/TigrexR/openfeign-springboot-demo
+- 规则引擎
+   - qlExpress
+   - groovy
+   - drools
+   - flink（流式数据库）
+   - 基础组件项目：https://github.com/TigrexR/rules-engine-demo
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
-- kafka、rabbitmq、rocketmq
+- springcloud-data-stream、kafka、rabbitmq、rocketmq
 - docker、k8s、Serve Mesh、ELK、jenkins
 - vue、nodeJS、single-spa
 - 设计模式、微服务、DDD
