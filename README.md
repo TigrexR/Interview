@@ -63,7 +63,7 @@
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
 - springcloud-data-stream、kafka、rabbitmq、rocketmq
-- docker、k8s、Serve Mesh、ELK、jenkins
+- docker、k8s、Serve Mesh、ELK、jenkins、JMH（测试工具库）
 - vue、nodeJS、single-spa
 - 设计模式、微服务、DDD
 
