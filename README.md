@@ -8,6 +8,7 @@
    - synchronized、thread pool、localthread、cas、aqs、unsafe
    - bio、nio、aio、netty
    - jvm、GI、ZGC、hotspot
+   - 代码：https://github.com/TigrexR/netty-springboot-demo
 - data structure
    - set、list、map、tree
     - 红黑树
@@ -59,7 +60,7 @@
    - groovy
    - drools
    - flink（流式数据库）
-   - 基础组件项目：https://github.com/TigrexR/rules-engine-demo
+   - 基础组件项目：https://github.com/TigrexR/rules-engine
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
 - springcloud-data-stream、kafka、rabbitmq、rocketmq
@@ -76,6 +77,7 @@
 - 新闻 -> 球员标签、球队标签
 - 比赛数据 -> 球员单场数据 -> 球队数据
 - 爬虫数据 -> 爬取hupu、nba.office
+- 代码：https://github.com/TigrexR/hupu
 
 
 讲清楚项目中所使用技术，相关最佳实践，总体罗列之后配合重点解析
