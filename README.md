@@ -71,7 +71,7 @@
    - 基础组件项目：https://github.com/TigrexR/geo
 - DUBBO rpc
    - dubbo、dubbo3.0
-   - sentinel 
+   - sentinel、slueth（阿里流量监控）
    - -> alibaba tcp、http2.0
    - 基础组件项目：https://github.com/TigrexR/dubbo-springboot-demo
 - OPEN-FEIGN rpc
@@ -87,8 +87,8 @@
    - flink（流式数据库）
    - 基础组件项目：https://github.com/TigrexR/rules-engine
 - zookeeper、eureka、nacos
-- 网关、springcloud-gateway
-- slueth（阿里流量监控）、zipkin（链路追踪）、arthas
+- springcloud-gateway
+- zipkin（链路追踪）、arthas
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
 - kafka、rabbitmq、rocketmq、kakfa-stream
