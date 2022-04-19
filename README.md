@@ -52,13 +52,6 @@
       - 策略模式
       - 模板方法模式
       - 访问者模式
-- Web基础组件
-   - spring、ioc、aop
-   - springmvc
-   - springboot
-   - mybatis、mybatis-plus
-   - druid、hikariCP
-   - 基础组件项目：https://github.com/TigrexR/geo
 - JVM字节码编制技术
    - ASM 
    - javassist
@@ -67,11 +60,15 @@
    - jacoco
    - AST、ANTLR
    - 基础组件项目：https://github.com/TigrexR/bytecode-springboot-demo
-- jwt、token
-- jackson、fastjson、protoBuf
-- zookeeper、eureka、nacos
-- 网关、springcloud-gateway
-- slueth（阿里流量监控）、zipkin（链路追踪）、arthas
+- Web基础组件
+   - jwt、token
+   - jackson、fastjson、protoBuf
+   - spring、ioc、aop
+   - springmvc
+   - springboot
+   - mybatis、mybatis-plus
+   - druid、hikariCP
+   - 基础组件项目：https://github.com/TigrexR/geo
 - DUBBO rpc
    - dubbo、dubbo3.0
    - sentinel 
@@ -89,9 +86,12 @@
    - drools
    - flink（流式数据库）
    - 基础组件项目：https://github.com/TigrexR/rules-engine
+- zookeeper、eureka、nacos
+- 网关、springcloud-gateway
+- slueth（阿里流量监控）、zipkin（链路追踪）、arthas
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
-- kakfa-stream、kafka、rabbitmq、rocketmq
+- kafka、rabbitmq、rocketmq、kakfa-stream
 - docker、k8s、Serve Mesh、ELK、jenkins、JMH（测试工具库）
 - vue、nodeJS、single-spa
 - 微服务、DDD
