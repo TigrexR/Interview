@@ -95,6 +95,7 @@
 - docker、k8s、Serve Mesh、ELK、jenkins、JMH（测试工具库）
 - vue、nodeJS、single-spa
 - 微服务、DDD
+- 最终目标：https://github.com/TigrexR/hupu
 
 ### 篮球论坛
 - 球队、交易、球员数据、比赛数据、新闻
