@@ -84,14 +84,14 @@
    - qlExpress
    - groovy
    - drools
-   - flink（流式数据库）
+   - flink（流式数据库）、kakfa-stream
    - 基础组件项目：https://github.com/TigrexR/rules-engine
 - zookeeper、eureka、nacos
 - springcloud-gateway
 - zipkin（链路追踪）、arthas
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
-- kafka、rabbitmq、rocketmq、kakfa-stream
+- kafka、rabbitmq、rocketmq
 - docker、k8s、Serve Mesh、ELK、jenkins、JMH（测试工具库）
 - vue、nodeJS、single-spa
 - 微服务、DDD
