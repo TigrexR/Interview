@@ -86,6 +86,19 @@
    - drools
    - flink（流式数据库）、kakfa-stream
    - 基础组件项目：https://github.com/TigrexR/rules-engine
+- 微信项目
+   - 微信接口
+   - 微信公众号平台项目：https://github.com/TigrexR/mhwechat
+- 前端技术
+   - vue-3.0
+   - node-js
+   - axios
+   - JavaScript
+   - TypeScript
+   - element-plus
+   - css
+   - single-spa
+   - 组件项目：https://github.com/TigrexR/single-spa-demo
 - zookeeper、eureka、nacos
 - springcloud-gateway
 - zipkin（链路追踪）、arthas
@@ -93,7 +106,6 @@
 - redis、redisson、elasticsearch、click-house、mongodb
 - kafka、rabbitmq、rocketmq
 - docker、k8s、Serve Mesh、ELK、jenkins、JMH（测试工具库）
-- vue、nodeJS、single-spa
 - 微服务、DDD
 - 最终目标：https://github.com/TigrexR/hupu
 
