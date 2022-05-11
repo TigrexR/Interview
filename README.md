@@ -99,8 +99,9 @@
          1. zipkin
       - 自己实现java-agent探针，通过开发人员自定义
    - 日志收集
-      1. logstash主动拉取
+      1. logstash主动拉取推送到kafka
       2. 日志输出服务异步推送kafka
+      3. 自己实现日志拉取服务，推送kafka
    - 日志处理
       1. flink
       2. kafka-stream
@@ -110,7 +111,7 @@
       - 长期存储到mongo
       - 超过一定时间，直接废弃或者结转
    - 日志数据分析
-      - 数据分析框架
+      - 数据分析框架：https://github.com/dataease/dataease
    - 在线问题排查
       - arthas
    - 日志监控项目：https://github.com/TigrexR/log-monitor
