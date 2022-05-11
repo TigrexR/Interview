@@ -90,6 +90,30 @@
 - 微信项目
    - 微信接口
    - 微信公众号平台项目：https://github.com/TigrexR/mhwechat
+- 日志监控系统
+   - 日志输出
+    - 通过java-agent直接植入
+        1. skywalking
+        2. pinpoint
+    - 轻量级的修改代码
+        1. zipkin
+    - 自己实现java-agent探针，通过开发人员自定义
+   - 日志收集
+    1. logstash主动拉取
+    2. 日志输出服务异步推送kafka
+   - 日志处理
+    1. flink
+    2. kafka-stream
+    3. 动态规则也可以和groovy结合
+   - 日志存储
+    - 短期存储到es
+    - 长期存储到mongo
+    - 超过一定时间，直接废弃或者结转
+   - 日志数据分析
+    - 数据分析框架
+   - 在线问题排查
+    - arthas
+   - 日志监控项目：https://github.com/TigrexR/log-monitor
 - 前端技术
    - vue-3.0
    - node-js
@@ -101,8 +125,7 @@
    - single-spa
    - 组件项目：https://github.com/TigrexR/single-spa-demo
 - zookeeper、eureka、nacos
-- springcloud-gateway
-- zipkin（链路追踪）、arthas
+- springcloud-gateway（网关）
 - mysql、oracle、sharding-jdbc、sharding-sphere、seata
 - redis、redisson、elasticsearch、click-house、mongodb
 - kafka、rabbitmq、rocketmq
