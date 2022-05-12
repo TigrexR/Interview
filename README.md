@@ -23,7 +23,7 @@
    - 交换排序—快速排序
    - 归并排序
    - 基数排序
-   - 代码：https://github.com/TigrexR/DataStruct
+   - 代码：https://github.com/TigrexR/deoxys
 - 设计模式
    - 单一职责原则、里氏替换原则、依赖倒置原则、接口隔离原则、迪米特法则、开闭原则
    - 创建型
