@@ -72,7 +72,7 @@
    - 基础组件项目：https://github.com/TigrexR/geo
 - DUBBO rpc
    - dubbo、dubbo3.0
-   - sentinel、slueth（阿里流量监控）
+   - sentinel
    - -> alibaba tcp、http2.0
    - 基础组件项目：https://github.com/TigrexR/dubbo-springboot-demo
 - OPEN-FEIGN rpc
@@ -96,7 +96,7 @@
          1. skywalking
          2. pinpoint
       - 轻量级的修改代码
-         1. zipkin
+         1. sleuth通过编制feign的span、zipkin
       - 自己实现java-agent探针，通过开发人员自定义
    - 日志收集
       1. logstash主动拉取推送到kafka
