@@ -1,7 +1,8 @@
 # 吾生也有涯，而知也无涯。以有涯随无涯，殆已！学如不及，犹恐失之。
 - 网络
    - TCP、UDP
-   - HTTP
+   - HTTP、HTTPS
+   - SSL、TLS
    - session、cookie
 - JAVA
    - jdk8、jdk11、jdk17
