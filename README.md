@@ -64,7 +64,7 @@
    - 基础组件项目：https://github.com/TigrexR/bytecode-springboot-demo
 - Web基础组件
    - jwt、token
-   - jackson、fastjson、protoBuf
+   - jackson、Gson、protobuf
    - spring、ioc、aop
    - springmvc
    - springboot
@@ -74,13 +74,13 @@
 - DUBBO rpc
    - dubbo、dubbo3.0
    - sentinel
-   - -> alibaba tcp、http2.0
+   - -> alibaba
    - 基础组件项目：https://github.com/TigrexR/dubbo-springboot-demo
 - OPEN-FEIGN rpc
    - feign
    - ribbon
-   - hystrix 
-   - -> open-feign http、http2.0
+   - hystrix
+   - -> open-feign
    - 基础组件项目：https://github.com/TigrexR/openfeign-springboot-demo
 - 规则引擎
    - qlExpress
