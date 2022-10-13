@@ -135,6 +135,11 @@
 - 微服务、DDD
 - 最终目标：https://github.com/TigrexR/hupu
 
+- 服务器结构
+   - 阿里云: nacos注册中心、zookeeper注册中心、mysql数据库、rabbitmq
+   - 三台台式机: kafka集群、redis集群、elasticsearch集群、mongodb集群
+   - 笔记本: idea代码
+
 ### 篮球论坛
 - 球队、交易、球员数据、比赛数据、新闻
 
