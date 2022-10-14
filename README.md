@@ -136,7 +136,7 @@
 - 最终目标：https://github.com/TigrexR/hupu
 
 - 服务器结构
-   - 阿里云: nacos注册中心、zookeeper注册中心、mysql数据库、rabbitmq
+   - 阿里云: nacos注册中心、zookeeper注册中心、公共mysql数据库、公共redis、公共rabbitmq
    - 三台台式机: kafka集群、redis集群、elasticsearch集群、mongodb集群
    - 笔记本: idea代码
 
